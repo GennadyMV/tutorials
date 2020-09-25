@@ -7,37 +7,21 @@ public class CmdCommander {
     static ArrayList<String> urls = new ArrayList<String>();
 
     static {
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/audit");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/portal");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/basement");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/cms");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/idm");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/web-scanner");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/russpass");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/portal-ssr.git");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/rbc-gateway");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/billing-ms-atol");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/billing-ms-carding");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/billing-ms-integration");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/partner-lk");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/mdm-service");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/mdm-web");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/basement-front");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/russpass-idm");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/russpass-audit");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/russpass-theme");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/n2o-studio");
-        urls.add("https://gitlab-01.russpass.com/russpass-prod/geo-storage.git");
+        urls.add("${URL:localhost}");
     }
 
     private final static String START_QUOTE = "\"";
     private final static String END_QUOTE = "\"";
     private final static String BASE_START = " cmd  /K start cmd /K ";
+//    private final static String BASE_START = " \"C:\\Program Files\\Git\\git-bash.exe\"   /K start git-bash.exe  /K ";
     private final static String FIRST_COMMAND_CHCPFIRST_COMMAND_CHCP = " chcp 1251 ";
     private final static String GIT_CLONE = " &git clone ";
     private final static String CHANGE_DIR = " &cd C:\\git\\russpass-prod ";
+    private final static String COMMAND = "\"C:\\Program Files\\Git\\git-bash.exe\" -c \"cd /c/git/russpass-prod/  && start git clone %s &&  start \"C:\\Program Files\\Git\\git-bash.exe -c \"";
+    private final static String COMMAND2 = "for branch in `git branch -a | sed -e \"s/remotes\\/origin.//\" `; do git checkout  ${branch} done";
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception {
 
     /*
     Rules are:
@@ -54,18 +38,23 @@ public class CmdCommander {
                     START_QUOTE +
                     FIRST_COMMAND_CHCPFIRST_COMMAND_CHCP +
                     CHANGE_DIR +
-                    "%s" +
+                    " %s" +
                     " %s " +
                     END_QUOTE;
 
-        urls.forEach(command -> {
-            try {
-                runCmd(String.format(totalCommand, GIT_CLONE, command));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        Thread t = Thread.currentThread();
+//        runCmd("\"C:\\Program Files\\Git\\git-bash.exe\" -c \"cd /c/git/russpass-prod/  && start git clone https://gitlab-01.russpass.com/russpass-prod/audit \"");
+//        runCmd("\"C:\\Program Files\\Git\\git-bash.exe\" -c \"cd /c/git/russpass-prod/  && start git clone https://gitlab-01.russpass.com/russpass-prod/audit \"");
+//        "C:\Program Files\Git\git-bash.exe" -cd C:\git\russpass-prod & start git clone https://gitlab-01.russpass.com/russpass-prod/audit"
+//        urls.forEach(command -> {
+//            try {
+//                runCmd(String.format(COMMAND,  command));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+        String replace = "https://gitlab-01.russpass.com/russpass-prod/geo-storage.git".replace("https://gitlab-01.russpass.com/russpass-prod/", "").replace(".git","");
+
+        runCmd( "\"C:\\Program Files\\Git\\git-bash.exe\" -c \"cd /c/git/russpass-prod/"+ ""+replace+" "+ COMMAND2+"");
     }
 
     public static void runCmd(String command) throws Exception {
@@ -73,6 +62,7 @@ public class CmdCommander {
         Runtime rt = Runtime.getRuntime();
         System.out.println(command);
         Process proc = rt.exec(command);
+//         rt.exec("\"C:\\Program Files\\Git\\git-bash.exe\" start git clone https://gitlab-01.russpass.com/russpass-prod/audit");
         System.out.println(proc.pid() + " finished");
 
 
