@@ -11,6 +11,10 @@ import java.util.logging.Logger;
 
 public class ProcessUnderstanding {
 
+    public static void main(String[] args) throws IOException {
+        int i = filterProcessWithStreamsInSpecificRangeReturnCount();
+    }
+
     public static int compileAndRunJavaProgram() throws IOException {
         Process process = Runtime.getRuntime()
             .exec("javac -cp src src\\main\\java\\com\\baeldung\\java9\\process\\OutputStreamExample.java");
